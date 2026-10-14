@@ -71,8 +71,9 @@
     row.className = 'chat-msg chat-msg--' + (role === 'user' ? 'user' : 'bot');
     var b = document.createElement('div');
     b.className = 'chat-bubble';
-    var wantsWa = text.indexOf(WA_TOKEN) !== -1;
-    renderText(b, text.split(WA_TOKEN).join('').trim());
+    var waRe = /\[\[\s*whats\s*a?p?p?\s*\]{0,2}|\[\[\s*w[a-z]{0,7}\s*\]?\s*$/gi;
+    var wantsWa = waRe.test(text);
+    renderText(b, text.replace(waRe, '').trim());
     row.appendChild(b);
     if (role !== 'user' && wantsWa && waNumber) {
       var a = document.createElement('a');
@@ -156,11 +157,14 @@
       : Promise.resolve(null);
 
     tryAi.then(function (data) {
-      if (data && data.reply) return data.reply;
-      return loadKnowledge().then(function () { return faqAnswer(text); });
-    }).then(function (reply) {
+      if (data && data.reply) return { content: data.reply, sig: data.sig };
+      return loadKnowledge().then(function () { return { content: faqAnswer(text) }; });
+    }).then(function (answer) {
       typing(false);
-      state.messages.push({ role: 'assistant', content: reply });
+      var reply = answer.content;
+      var msg = { role: 'assistant', content: reply };
+      if (answer.sig) msg.sig = answer.sig; // server signature: proves the bot really said this
+      state.messages.push(msg);
       bubble('assistant', reply); save(); updateWa();
     }).finally(function () {
       busy = false; sendBtn.disabled = false; input.focus();

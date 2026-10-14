@@ -46,9 +46,18 @@ Optional settings: `GEMINI_MODEL` (default `gemini-3.5-flash-lite`), `GEMINI_FAL
 
 **Changing what the bot knows:** edit `assets/chat-knowledge.json` (prices, plans, FAQ answers) and push. Both the AI and the FAQ fallback read it, so they always agree. Keep `keywords` on each FAQ entry; the fallback uses them to match questions.
 
-**Safeguards:** the key is only in Vercel's settings; the function only answers requests from your own domain, caps messages at 500 characters and 12 turns, limits each visitor to 20 messages per 10 minutes, gives up after 25 seconds, and is told to use only the facts in the knowledge file and to refuse unrelated requests. The per-visitor limit is per server instance; if you ever see abuse, add a shared limit with Upstash Redis.
+**Safeguards** (tested with 44 attack prompts against live Gemini, all blocked):
 
-**Privacy:** on Gemini's free tier, Google may use prompts to improve its products. The chat tells visitors not to share sensitive details, and the Privacy page explains it. Turning on billing for the key (paid tier) stops that.
+- The API key lives only in Vercel's settings (or `.env.local` locally) and never reaches the browser.
+- The bot may only use the facts in `assets/chat-knowledge.json`; it refuses off-topic tasks (code, essays, homework), won't reveal its instructions, and can't be talked into discounts, free work, refunds, deadlines or guarantees, including by messages pretending to be a founder or "system update".
+- **Signed history:** every bot reply is signed by the server, and the browser sends the signature back. Bot turns the visitor typed or edited are thrown away before reaching Gemini, so nobody can put words in the bot's mouth.
+- **Links:** replies can only link to tech.siswaa.com, siswaa.com, easipaper.in and WhatsApp; any other link is replaced with "[link removed]". The page renders replies as plain text, never HTML.
+- **Limits:** 500 characters per message, last 12 turns, 20 messages per visitor per 10 minutes (by the IP Vercel reports, which visitors can't fake), and a whole-server budget of 12 AI replies a minute and 300 an hour. Past the budget the chat answers from the FAQ instead of calling Google, which keeps the free tier under Google's per-minute limit and caps usage if someone floods it.
+- Requests are only accepted from your own domain (and localhost for testing), give up after 25 seconds, and fall back to the FAQ on any error.
+
+Settings: `CHAT_MAX_PER_MINUTE` (default 12) and `CHAT_MAX_PER_HOUR` (default 300). Budgets are counted per server instance; for a hard shared limit add Upstash Redis or a Vercel Firewall rate-limit rule on `/api/chat`.
+
+**Free tier:** the site runs fine on Gemini's free tier. When many people chat at once, the per-minute budget switches extra visitors to FAQ answers instead of hitting Google's limit. On the free tier Google may use prompts to improve its products; the chat tells visitors not to share sensitive details and the Privacy page explains it. Enabling billing on the key later removes both limits.
 
 ## Deploy
 
