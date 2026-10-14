@@ -85,6 +85,8 @@ function originAllowed(req) {
   const extra = String(process.env.ALLOWED_ORIGINS || '').split(',').map((s) => s.trim()).filter(Boolean);
   const host = req.headers['x-forwarded-host'] || req.headers.host;
   const allowed = new Set([...DEFAULT_ORIGINS, ...extra, host ? `https://${host}` : '']);
+  // Local testing (npm run dev / vercel dev) runs on plain http://localhost.
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
   return allowed.has(origin);
 }
 

@@ -28,7 +28,13 @@ Also worth doing:
 The "Ask us" button opens a chat that answers questions about plans, prices, apps and timelines, then hands visitors to WhatsApp with a summary of what they asked.
 
 - **With an API key** (on Vercel): answers come from Google Gemini through `api/chat.js`.
-- **Without a key, or if Gemini fails or runs out of quota:** answers come from the FAQ in `assets/chat-knowledge.json`, inside the browser. Localhost (`python3 -m http.server`) always uses this mode, because it can't run the server function. To try the AI locally, use `npx vercel dev` with the key in a `.env.local` file.
+- **Without a key, or if Gemini fails or runs out of quota:** answers come from the FAQ in `assets/chat-knowledge.json`, inside the browser. `python3 -m http.server` always uses this mode, because it can't run the server function.
+
+**Test the real AI on your computer:**
+
+1. Copy `.env.example` to `.env.local` and paste your key after `GEMINI_API_KEY=`. Git ignores `.env.local`, so the key never reaches GitHub.
+2. Run `npm run dev` in this folder (no install needed) and open http://localhost:3000.
+3. The terminal says "Chat: real AI" when the key is loaded. Stop with Ctrl+C; restart after changing `.env.local`.
 
 **Turn on the AI (5 minutes):**
 
@@ -55,10 +61,10 @@ Then add the custom domain `tech.siswaa.com` in the host's domain settings and c
 ## Run locally
 
 ```
-python3 -m http.server 8000
+npm run dev
 ```
 
-Then open http://localhost:8000.
+Then open http://localhost:3000. This runs the site with its real security headers and the AI chat (see above). `python3 -m http.server 8000` also works, but the chat then uses FAQ answers only.
 
 ## Files
 
@@ -78,6 +84,8 @@ assets/fonts/     Self-hosted fonts (subset), with their licences
 assets/*.webp/png Logo, icons, Easipaper screenshot, link-preview image
 site.webmanifest  App name and icons for phones
 .well-known/security.txt  Where to report a security issue
+dev-server.js     Local server with the AI chat (npm run dev); not deployed
+.env.example      Template for .env.local, where your Gemini key goes locally
 vercel.json       Security headers and caching on Vercel
 netlify.toml      Security headers and caching on Netlify
 ```

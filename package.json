@@ -1,0 +1,11 @@
+{
+  "name": "siswaa-tech",
+  "private": true,
+  "description": "Siswaa Technologies website",
+  "scripts": {
+    "dev": "node dev-server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
