@@ -143,9 +143,12 @@
       var text = lines.join('\n');
 
       if (hasWhatsApp) {
+        // Open WhatsApp in a new tab and keep this page where it is.
+        // (window.open with the 'noopener' feature always returns null, so it can't be used to detect a blocked popup.)
         var url = waUrl(text);
-        var win = window.open(url, '_blank', 'noopener');
-        if (!win) window.location.href = url;
+        var win = window.open(url, '_blank');
+        if (win) { try { win.opener = null; } catch (err) {} }
+        else { window.location.href = url; }
       } else if (cfg.email) {
         window.location.href = 'mailto:' + cfg.email +
           '?subject=' + encodeURIComponent('Website enquiry from ' + name) +

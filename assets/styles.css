@@ -1,6 +1,28 @@
 /* Siswaa Technologies — tech.siswaa.com
    Light is the default; dark follows the system setting or the header toggle. */
 
+/* Fonts: self-hosted, subset to the characters this site uses (SIL Open Font License, see assets/fonts). */
+@font-face { font-family: 'Bricolage Grotesque'; font-style: normal; font-weight: 500 800; font-display: swap;
+  src: url('/assets/fonts/bricolage.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-2019, U+201C-201D, U+2022, U+2026, U+2122, U+2192; }
+@font-face { font-family: 'Bricolage Grotesque'; font-style: normal; font-weight: 500 800; font-display: swap;
+  src: url('/assets/fonts/bricolage-rupee.woff2') format('woff2'); unicode-range: U+20B9; }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 300 900; font-display: swap;
+  src: url('/assets/fonts/figtree.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-2019, U+201C-201D, U+2022, U+2026, U+2122, U+2192; }
+@font-face { font-family: 'Figtree'; font-style: normal; font-weight: 300 900; font-display: swap;
+  src: url('/assets/fonts/figtree-rupee.woff2') format('woff2'); unicode-range: U+20B9; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/assets/fonts/plex-mono-400.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-2019, U+201C-201D, U+2022, U+2026, U+2122, U+2192; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/assets/fonts/plex-mono-400-rupee.woff2') format('woff2'); unicode-range: U+20B9; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('/assets/fonts/plex-mono-600.woff2') format('woff2');
+  unicode-range: U+0020-007E, U+00A0-00FF, U+2013-2014, U+2018-2019, U+201C-201D, U+2022, U+2026, U+2122, U+2192; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('/assets/fonts/plex-mono-600-rupee.woff2') format('woff2'); unicode-range: U+20B9; }
+
 :root {
   --bg: #F6F6F3;
   --surface: #FFFFFF;
@@ -10,6 +32,7 @@
   --line: #E2E1DC;
   --line-strong: #C9C8C2;
   --accent: #E23B2E;
+  --accent-fill: #D93427;
   --accent-hover: #C42B1F;
   --accent-ink: #C42B1F;
   --accent-soft: #FCEAE8;
@@ -121,8 +144,8 @@ p { margin: 0; }
 }
 .btn-wa { background: var(--green); color: #fff; }
 .btn-wa:hover { background: var(--green-hover); color: #fff; }
-.btn-red { background: var(--accent); color: #fff; }
-.btn-red:hover { background: var(--accent-hover); color: #fff; }
+.btn-red { background: var(--accent-fill); color: #fff; }
+.btn-red:hover { background: #C42B1F; color: #fff; }
 .btn-ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
 .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
 .btn-lg { min-height: 56px; font-size: 17px; }
@@ -288,7 +311,7 @@ p { margin: 0; }
 .plan--featured { border: 2px solid var(--accent); box-shadow: var(--shadow); }
 .plan-badge {
   position: absolute; top: -14px; left: 24px; padding: 5px 12px; border-radius: 999px;
-  background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
+  background: var(--accent-fill); color: #fff; font-size: 13px; font-weight: 700; letter-spacing: 0.02em;
 }
 .plan-desc { color: var(--muted); font-size: 15px; margin-top: 4px; }
 .plan-price { display: flex; align-items: baseline; gap: 6px; }
@@ -357,7 +380,7 @@ p { margin: 0; }
 }
 .founding-badge {
   align-self: flex-start; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 999px;
-  background: var(--accent); color: #fff; letter-spacing: 0.02em;
+  background: var(--accent-fill); color: #fff; letter-spacing: 0.02em;
 }
 .founding .h3 { font-weight: 800; font-size: 30px; line-height: 1.1; }
 .founding .btn { margin-top: auto; align-self: stretch; }
@@ -477,3 +500,16 @@ legend { font-weight: 600; font-size: 15px; padding: 0; margin-bottom: 10px; }
 .legal h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: clamp(34px, 5vw, 48px); letter-spacing: -0.02em; line-height: 1.1; }
 .legal h2 { margin: 18px 0 0; font-family: var(--font-display); font-weight: 700; font-size: 22px; }
 .legal ul { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+
+/* ---------- Utilities (replace former inline styles, so the CSP can forbid them) ---------- */
+.bill { margin: 0; }
+.bill-rule--top { margin: 18px 0 14px; }
+.bill-setup { margin-top: 4px; }
+.founding-lead { font-size: 18px; }
+.text-sm { font-size: 15px; }
+.strong { font-weight: 700; }
+.email-link svg { flex: none; }
+.grid-people { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 18px; }
+.footer-meta { display: flex; flex-direction: column; gap: 6px; }
+.site-footer--plain { padding-bottom: 32px; }
+.btn-sm { min-height: 44px; }
