@@ -27,7 +27,7 @@ Also worth doing:
 
 The "Ask us" button opens a chat that answers questions about plans, prices, apps and timelines, then hands visitors to WhatsApp with a summary of what they asked.
 
-- **With an API key** (on Vercel): answers come from Google Gemini through `api/chat.js`.
+- **With an API key:** answers come from Google Gemini through `api/chat.js`: `gemini-3.5-flash-lite` first (about 1 second), and `gemini-3.8-flash` automatically if the first is busy or slow.
 - **Without a key, or if Gemini fails or runs out of quota:** answers come from the FAQ in `assets/chat-knowledge.json`, inside the browser. `python3 -m http.server` always uses this mode, because it can't run the server function.
 
 **Test the real AI on your computer:**
@@ -42,11 +42,11 @@ The "Ask us" button opens a chat that answers questions about plans, prices, app
 2. In Vercel: your project → Settings → Environment Variables → add `GEMINI_API_KEY` with that key (Production and Preview).
 3. Redeploy (Deployments → ⋯ → Redeploy). Open the site and ask the chat something.
 
-Optional settings: `GEMINI_MODEL` (default `gemini-3.8-flash`; e.g. `gemini-3.5-flash-lite` is cheaper) and `ALLOWED_ORIGINS` (extra domains allowed to use the chat, comma-separated).
+Optional settings: `GEMINI_MODEL` (default `gemini-3.5-flash-lite`), `GEMINI_FALLBACK_MODEL` (default `gemini-3.8-flash`) and `ALLOWED_ORIGINS` (extra domains allowed to use the chat, comma-separated). Google sometimes returns "high demand" errors; the backup model and the FAQ fallback cover that.
 
 **Changing what the bot knows:** edit `assets/chat-knowledge.json` (prices, plans, FAQ answers) and push. Both the AI and the FAQ fallback read it, so they always agree. Keep `keywords` on each FAQ entry; the fallback uses them to match questions.
 
-**Safeguards:** the key is only in Vercel's settings; the function only answers requests from your own domain, caps messages at 500 characters and 12 turns, limits each visitor to 20 messages per 10 minutes, times out after 9 seconds, and is told to use only the facts in the knowledge file and to refuse unrelated requests. The per-visitor limit is per server instance; if you ever see abuse, add a shared limit with Upstash Redis.
+**Safeguards:** the key is only in Vercel's settings; the function only answers requests from your own domain, caps messages at 500 characters and 12 turns, limits each visitor to 20 messages per 10 minutes, gives up after 25 seconds, and is told to use only the facts in the knowledge file and to refuse unrelated requests. The per-visitor limit is per server instance; if you ever see abuse, add a shared limit with Upstash Redis.
 
 **Privacy:** on Gemini's free tier, Google may use prompts to improve its products. The chat tells visitors not to share sensitive details, and the Privacy page explains it. Turning on billing for the key (paid tier) stops that.
 

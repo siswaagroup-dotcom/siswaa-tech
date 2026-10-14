@@ -3,7 +3,8 @@
  *
  * Environment variables (Vercel → Settings → Environment Variables):
  *   GEMINI_API_KEY   required for AI answers. Without it the site uses its built-in FAQ answers.
- *   GEMINI_MODEL     optional, default 'gemini-3.8-flash'.
+ *   GEMINI_MODEL           optional, default 'gemini-3.5-flash-lite' (fast, cheap).
+ *   GEMINI_FALLBACK_MODEL  optional, default 'gemini-3.8-flash'; used when the first model is busy or slow.
  *   ALLOWED_ORIGINS  optional, comma-separated extra origins (the site's own domain is always allowed).
  *
  * The key never leaves this server. Any failure returns { fallback: true } so the page
@@ -13,13 +14,15 @@
 
 const knowledge = require('../assets/chat-knowledge.json');
 
-const MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+const MODEL = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+const FALLBACK_MODEL = process.env.GEMINI_FALLBACK_MODEL || 'gemini-3.8-flash';
 const MAX_MESSAGES = 12;          // conversation turns sent to the model
 const MAX_CHARS = 500;            // per message
 const MAX_TOTAL_CHARS = 6000;     // whole conversation
 const RATE_LIMIT = 20;            // messages per visitor...
 const RATE_WINDOW_MS = 10 * 60 * 1000; // ...per 10 minutes
-const TIMEOUT_MS = 9000;
+const ATTEMPT_TIMEOUT_MS = 12000; // per model
+const TOTAL_BUDGET_MS = 25000;    // whole request (vercel.json allows the function 30s)
 
 const DEFAULT_ORIGINS = ['https://tech.siswaa.com', 'https://siswaa.com', 'https://www.siswaa.com'];
 
@@ -131,16 +134,36 @@ module.exports = async function handler(req, res) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return send(res, 200, { fallback: true });
 
+  const started = Date.now();
+  const models = [MODEL, FALLBACK_MODEL].filter((m, i, a) => m && a.indexOf(m) === i);
+  for (const model of models) {
+    const left = TOTAL_BUDGET_MS - (Date.now() - started);
+    if (left < 3000) break;
+    const result = await askGemini(model, contents, key, Math.min(ATTEMPT_TIMEOUT_MS, left));
+    if (result.reply) return send(res, 200, { reply: result.reply });
+    if (!result.retryable) break; // e.g. bad key: another model won't help
+  }
+  return send(res, 200, { fallback: true });
+};
+
+// Lite models think "minimal"; full Flash models don't support that level, so use "low".
+function thinkingFor(model) {
+  return { thinkingLevel: /lite/.test(model) ? 'minimal' : 'low' };
+}
+
+async function askGemini(model, contents, key, timeoutMs, withThinking = true) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(MODEL)}:generateContent`, {
+    const generationConfig = { temperature: 0.4, maxOutputTokens: 500 };
+    if (withThinking) generationConfig.thinkingConfig = thinkingFor(model);
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemPrompt() }] },
         contents,
-        generationConfig: { temperature: 0.4, maxOutputTokens: 400 },
+        generationConfig,
         safetySettings: [
           { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
           { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_MEDIUM_AND_ABOVE' },
@@ -151,20 +174,26 @@ module.exports = async function handler(req, res) {
       signal: controller.signal
     });
     if (!r.ok) {
-      console.error('Gemini error', r.status, (await r.text()).slice(0, 300));
-      return send(res, 200, { fallback: true });
+      const detail = (await r.text()).slice(0, 300);
+      console.error(`Gemini ${model} error ${r.status}: ${detail}`);
+      // A model that rejects the thinking setting: try once more without it.
+      if (r.status === 400 && withThinking && /thinking/i.test(detail)) {
+        clearTimeout(timer);
+        return askGemini(model, contents, key, timeoutMs, false);
+      }
+      // Busy, rate-limited, server error, or model not found: worth trying the other model.
+      return { retryable: r.status === 429 || r.status === 404 || r.status >= 500 };
     }
     const data = await r.json();
     const parts = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) || [];
     const reply = parts.filter((p) => typeof p.text === 'string' && !p.thought).map((p) => p.text).join('').trim();
-    if (!reply) return send(res, 200, { fallback: true });
-    return send(res, 200, { reply: reply.slice(0, 2000) });
+    return reply ? { reply: reply.slice(0, 2000) } : { retryable: false };
   } catch (err) {
-    console.error('Gemini request failed', err && err.name);
-    return send(res, 200, { fallback: true });
+    console.error(`Gemini ${model} request failed: ${err && err.name}`);
+    return { retryable: true }; // timeout or network error
   } finally {
     clearTimeout(timer);
   }
-};
+}
 
 module.exports.systemPrompt = systemPrompt; // exported for tests

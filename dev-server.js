@@ -78,7 +78,7 @@ http.createServer((req, res) => {
   const hasKey = key && key !== 'paste-your-key-here';
   console.log(`\nSiswaa site running at http://localhost:${PORT}`);
   console.log(hasKey
-    ? `Chat: real AI (${process.env.GEMINI_MODEL || 'gemini-3.8-flash'}), key loaded from .env.local`
+    ? `Chat: real AI (${process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite'}, backup ${process.env.GEMINI_FALLBACK_MODEL || 'gemini-3.8-flash'}), key loaded from .env.local`
     : 'Chat: FAQ answers only. Put GEMINI_API_KEY in .env.local and restart for real AI.');
   console.log('Press Ctrl+C to stop.\n');
 });
