@@ -23,6 +23,27 @@ Also worth doing:
 - Founder descriptions: edit the one-line bios in the founders section of `index.html`.
 - Have the Terms page (`terms.html`) checked against your client agreement.
 
+## Chat assistant (AI)
+
+The "Ask us" button opens a chat that answers questions about plans, prices, apps and timelines, then hands visitors to WhatsApp with a summary of what they asked.
+
+- **With an API key** (on Vercel): answers come from Google Gemini through `api/chat.js`.
+- **Without a key, or if Gemini fails or runs out of quota:** answers come from the FAQ in `assets/chat-knowledge.json`, inside the browser. Localhost (`python3 -m http.server`) always uses this mode, because it can't run the server function. To try the AI locally, use `npx vercel dev` with the key in a `.env.local` file.
+
+**Turn on the AI (5 minutes):**
+
+1. Go to https://aistudio.google.com/apikey, sign in, and create an API key.
+2. In Vercel: your project → Settings → Environment Variables → add `GEMINI_API_KEY` with that key (Production and Preview).
+3. Redeploy (Deployments → ⋯ → Redeploy). Open the site and ask the chat something.
+
+Optional settings: `GEMINI_MODEL` (default `gemini-3.8-flash`; e.g. `gemini-3.5-flash-lite` is cheaper) and `ALLOWED_ORIGINS` (extra domains allowed to use the chat, comma-separated).
+
+**Changing what the bot knows:** edit `assets/chat-knowledge.json` (prices, plans, FAQ answers) and push. Both the AI and the FAQ fallback read it, so they always agree. Keep `keywords` on each FAQ entry; the fallback uses them to match questions.
+
+**Safeguards:** the key is only in Vercel's settings; the function only answers requests from your own domain, caps messages at 500 characters and 12 turns, limits each visitor to 20 messages per 10 minutes, times out after 9 seconds, and is told to use only the facts in the knowledge file and to refuse unrelated requests. The per-visitor limit is per server instance; if you ever see abuse, add a shared limit with Upstash Redis.
+
+**Privacy:** on Gemini's free tier, Google may use prompts to improve its products. The chat tells visitors not to share sensitive details, and the Privacy page explains it. Turning on billing for the key (paid tier) stops that.
+
 ## Deploy
 
 **Vercel:** New Project → import this repo → Framework preset "Other" → no build command, output directory `.` → Deploy.
@@ -48,6 +69,9 @@ terms.html        Terms page (/terms)
 404.html          Not-found page
 assets/config.js  WhatsApp number, booking link, email
 assets/main.js    Theme toggle, pricing toggle, WhatsApp links, enquiry form
+assets/chat.js    Chat assistant widget (AI answers, FAQ fallback, WhatsApp handoff)
+assets/chat-knowledge.json  Everything the chat assistant knows: plans, prices, FAQ
+api/chat.js       Vercel server function that asks Google Gemini (keeps the API key secret)
 assets/theme-init.js  Applies the saved light/dark choice before the page paints
 assets/styles.css All styles, light and dark themes
 assets/fonts/     Self-hosted fonts (subset), with their licences

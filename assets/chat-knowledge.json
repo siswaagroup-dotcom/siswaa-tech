@@ -1,0 +1,270 @@
+{
+  "_comment": "Single source of truth for the chat assistant. The AI (api/chat.js) and the offline FAQ fallback (assets/chat.js) both read this file. Keep it factual: the bot will only say what is written here.",
+  "business": {
+    "name": "Siswaa Technologies",
+    "parent": "Siswaa Group (siswaa.com)",
+    "what": "A founder-run software studio in India. Websites on a monthly plan, Android and iOS apps, full-stack web apps, and care and revamp of existing apps and websites.",
+    "founders": "Atul Singh Bhadouria and Abhishek Sharma, both developers. Clients talk directly to the people building their product.",
+    "whatsapp": "+91 72178 33746",
+    "email": "siswaagroup@gmail.com",
+    "website": "https://tech.siswaa.com",
+    "area": "Anywhere in India. Work happens over WhatsApp, phone and video calls."
+  },
+  "plans": [
+    {
+      "name": "Starter",
+      "monthly": "₹399/month",
+      "yearly": "₹3,990/year",
+      "setup": "₹999 one-time setup (free on yearly plans)",
+      "includes": "1-page website, domain, hosting and SSL, WhatsApp and call buttons, Google Maps link, 1 update every month",
+      "bestFor": "Shops and local businesses that just need customers to find and call them"
+    },
+    {
+      "name": "Business",
+      "monthly": "₹999/month",
+      "yearly": "₹9,990/year",
+      "setup": "₹1,999 one-time setup (free on yearly plans)",
+      "includes": "Up to 5 pages, enquiry form, photo gallery, Google Business profile setup, basic SEO, 3 updates every month",
+      "bestFor": "Most businesses: clinics, salons, coaching centres, restaurants that want enquiries. The most popular plan."
+    },
+    {
+      "name": "Growth",
+      "monthly": "₹2,499/month",
+      "yearly": "₹24,990/year",
+      "setup": "₹4,999 one-time setup (free on yearly plans)",
+      "includes": "Everything in Business, plus online booking or ordering, online payments, priority support, monthly visitor report",
+      "bestFor": "Businesses that want to take bookings, orders or payments online"
+    }
+  ],
+  "planRules": [
+    "Yearly plans give 2 months free and the setup fee is waived.",
+    "Monthly plans are paid by UPI AutoPay or card and have a 6-month minimum.",
+    "After the minimum, monthly plans can be cancelled with 30 days' notice.",
+    "Prices exclude GST where applicable.",
+    "Founding client offer: the first 10 clients get the setup fee waived."
+  ],
+  "services": [
+    {
+      "name": "App and full-stack builds",
+      "details": "Android and iOS apps, web apps and dashboards, customer portals, first versions (MVPs) for founders, backends and APIs. One fixed price after a free call. No per-hour billing."
+    },
+    {
+      "name": "Care and revamp",
+      "details": "Fix bugs, update apps for new Android and iOS versions, redesign, move to new hosting and put it live again, ongoing care. Care plans from ₹4,999/month. Start with a free app health check."
+    }
+  ],
+  "process": [
+    "1. Message on WhatsApp and describe the business and what is needed.",
+    "2. Siswaa plans it and gives a fixed price before starting.",
+    "3. Siswaa builds it. Websites go live in about 7 days once details and photos are received. Progress is shared on WhatsApp.",
+    "4. Launch, and Siswaa keeps it running. Changes are requested by message."
+  ],
+  "portfolio": "Easipaper (easipaper.in), built and run by Siswaa: 39 free paperwork tools for Indian salary, tax, rent and HR. Runs entirely in the browser, no sign-up, no server storing data, updated for FY 2026-27 rules. Siswaa is new; the first client sites will be added as they launch.",
+  "faq": [
+    {
+      "q": "Who owns the website?",
+      "a": "You do. The domain is in your business's name, and your content and photos are yours. If you ever want to move, Siswaa hands everything over.",
+      "keywords": [
+        "own",
+        "owner",
+        "ownership",
+        "mine",
+        "domain",
+        "transfer",
+        "move"
+      ]
+    },
+    {
+      "q": "Can I cancel?",
+      "a": "Yes. Monthly plans have a 6-month minimum, and after that you can cancel any time with 30 days' notice. Yearly plans run for the year you've paid for.",
+      "keywords": [
+        "cancel",
+        "cancellation",
+        "stop",
+        "quit",
+        "minimum",
+        "contract",
+        "lock"
+      ]
+    },
+    {
+      "q": "How do I pay?",
+      "a": "Monthly plans are paid by UPI AutoPay or card, so you never have to remember. Yearly plans are paid once for the whole year, and the setup fee is waived.",
+      "keywords": [
+        "pay",
+        "payment",
+        "upi",
+        "card",
+        "autopay",
+        "gst",
+        "invoice",
+        "bill"
+      ]
+    },
+    {
+      "q": "How long does it take?",
+      "a": "Websites go live in about 7 days once Siswaa has your details and photos. For apps and bigger builds you get a timeline together with the fixed price.",
+      "keywords": [
+        "long",
+        "time",
+        "days",
+        "weeks",
+        "fast",
+        "quick",
+        "when",
+        "timeline",
+        "deadline",
+        "kitne din"
+      ]
+    },
+    {
+      "q": "Do you work outside Delhi?",
+      "a": "Yes. Siswaa works over WhatsApp, phone and video calls, so it works the same anywhere in India.",
+      "keywords": [
+        "delhi",
+        "city",
+        "location",
+        "where",
+        "outside",
+        "remote",
+        "india",
+        "near"
+      ]
+    },
+    {
+      "q": "What if I already have a website or app?",
+      "a": "Siswaa can fix it, update it, redesign it or move it. Start with a free app health check and you'll be told, in plain words, what needs work. Care plans start at ₹4,999/month.",
+      "keywords": [
+        "already",
+        "existing",
+        "fix",
+        "bug",
+        "broken",
+        "revamp",
+        "redesign",
+        "update",
+        "old",
+        "slow",
+        "health check",
+        "maintenance",
+        "care"
+      ]
+    },
+    {
+      "q": "Which plan should I choose?",
+      "a": "Starter (₹399/month) is a 1-page site so customers can find and call you. Business (₹999/month) is the most popular: up to 5 pages, enquiry form, gallery and Google Business setup. Growth (₹2,499/month) adds online booking, ordering and payments. Tell me what your business does and I'll suggest one.",
+      "keywords": [
+        "plan",
+        "plans",
+        "which",
+        "choose",
+        "suggest",
+        "recommend",
+        "best",
+        "starter",
+        "business",
+        "growth",
+        "difference",
+        "compare"
+      ]
+    },
+    {
+      "q": "How much does a website cost?",
+      "a": "Websites start at ₹399/month (Starter) plus a ₹999 one-time setup. Business is ₹999/month and Growth is ₹2,499/month. Pay yearly and you get 2 months free with no setup fee.",
+      "keywords": [
+        "cost",
+        "price",
+        "pricing",
+        "charge",
+        "fees",
+        "fee",
+        "how much",
+        "rate",
+        "kitna",
+        "kitne",
+        "paisa",
+        "rupees",
+        "₹",
+        "cheap",
+        "budget",
+        "website",
+        "site",
+        "webpage"
+      ]
+    },
+    {
+      "q": "How much does an app cost?",
+      "a": "Apps and custom builds get one fixed price after a free call, because every app is different. There's no hourly billing, and you know the full cost before work starts.",
+      "keywords": [
+        "app",
+        "apps",
+        "android",
+        "ios",
+        "iphone",
+        "mobile",
+        "application",
+        "mvp",
+        "web app",
+        "dashboard",
+        "portal",
+        "backend",
+        "api",
+        "software",
+        "custom"
+      ]
+    },
+    {
+      "q": "What have you built?",
+      "a": "Siswaa built and runs Easipaper (easipaper.in): 39 free paperwork tools for Indian salary, tax, rent and HR that run entirely in the browser. Siswaa is new, so the first 10 clients get the setup fee waived.",
+      "keywords": [
+        "portfolio",
+        "work",
+        "built",
+        "example",
+        "examples",
+        "previous",
+        "past",
+        "clients",
+        "easipaper",
+        "proof",
+        "experience",
+        "samples"
+      ]
+    },
+    {
+      "q": "Who are you?",
+      "a": "Siswaa Technologies is a founder-run software studio in India, run by two developers, Atul Singh Bhadouria and Abhishek Sharma. You talk directly to the people building your product.",
+      "keywords": [
+        "team",
+        "founder",
+        "founders",
+        "company",
+        "siswaa",
+        "atul",
+        "abhishek",
+        "who are you",
+        "about siswaa",
+        "about you"
+      ]
+    },
+    {
+      "q": "How do I contact you?",
+      "a": "WhatsApp or call +91 72178 33746, or email siswaagroup@gmail.com. You'll reach Atul or Abhishek directly.",
+      "keywords": [
+        "contact",
+        "call",
+        "phone",
+        "number",
+        "email",
+        "mail",
+        "whatsapp",
+        "talk",
+        "human",
+        "person",
+        "reach",
+        "meet",
+        "book"
+      ]
+    }
+  ]
+}
